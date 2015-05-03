@@ -23,6 +23,7 @@ COPY conf/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default
 COPY conf/nginx/directives                   /etc/nginx/directives
 COPY conf/nginx/location                     /etc/nginx/location
 COPY conf/nginx/nginx.conf                   /etc/nginx/nginx.conf
+COPY conf/nginx/common.conf                  /etc/nginx/common.conf
 
 # Run without daemon: http://stackoverflow.com/questions/18861300/how-to-run-nginx-within-docker-container-without-halting
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf

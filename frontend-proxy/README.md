@@ -60,9 +60,10 @@ where -t is the container's tag name.
 
 To run the container, execute
 
-`docker run -d -p 80:80 -p 443:443 -v /path/to/nginx/ssl-certs/folder/:/etc/nginx/certs/ --env-file path/to/users_ids_definition -e BASE_HOSTNAME=localhost --name cloud-frontend-proxy cloud-frontend-proxy`
+`docker run -d -p 80:80 -p 443:443 -v /path/to/nginx/ssl-certs/folder/:/etc/nginx/certs/ --env-file path/to/users_ids_definition -e BASE_HOSTNAME=localhost -e PROXY_HOST=172.17.42.1 --name cloud-frontend-proxy cloud-frontend-proxy`
 
 - `-p` here is binding to the usual 80 / 443 ports
 - `--env-file` sources the environment variables from the provided file, which should contain a list of all user & their ids
 - `BASE_HOSTNAME` should match the base hostname the frontend server will listen to
+- `PROXY_HOST` should match the host that will server the code-editor/webserver containers (leave empty to use host calling script)
 - optionally override build image certificates by pointing `cert.crt`, `cert.key` files to `/etc/nginx/certs`
