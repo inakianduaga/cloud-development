@@ -7,3 +7,5 @@
 # Base hostname of the cloud-frontend-proxy
 BASE_HOSTNAME=localhost
 
+# Starting port range
+CLOUD_STARTING_PORT=8080
