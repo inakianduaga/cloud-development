@@ -40,6 +40,9 @@ Before building the image, place the server's ssl certificates in the folder `./
 ./certs/cert.key;
 ```
 
+For local testing, check these [instructions](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04)
+on how to create a self-signed certificate.
+
 ##### Cloud users list
 
 When running the container, a list of users w/ their unique ids has to be provided to the container via environment variables.
