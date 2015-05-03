@@ -42,13 +42,13 @@ for p in ${USERS///$'\n'} ; do
   USER_WEBSERVER="${USER}_${SUBDOMAIN_WEBSERVER_STRING}"
 
   # Proxy redirect for the editor
-  echo "if(\$userapp ~ "${USER_EDITOR}") {"
-  echo "proxy_pass http://127.0.0.1:${EDITOR_PORT}\$uri\$is_args\$args;"
+  echo "if (\$userapp = "${USER_EDITOR}") {"
+  echo "  proxy_pass http://127.0.0.1:${EDITOR_PORT}\$uri\$is_args\$args;"
   echo "}"
 
   # Proxy redirect for the webserver
-  echo "if(\$userapp ~ "${USER_WEBSERVER}") {"
-  echo "proxy_pass http://127.0.0.1:${WEBSERVER_PORT}\$uri\$is_args\$args;"
+  echo "if (\$userapp = "${USER_WEBSERVER}") {"
+  echo "  proxy_pass http://127.0.0.1:${WEBSERVER_PORT}\$uri\$is_args\$args;"
   echo "}"
 
 done

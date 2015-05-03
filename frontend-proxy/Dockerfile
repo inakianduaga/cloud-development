@@ -29,6 +29,7 @@ RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 
 # add certificates
 COPY certs /etc/nginx
+VOLUME /etc/nginx/certs
 
 # Expose ports nginx listens to
 EXPOSE 80 443
