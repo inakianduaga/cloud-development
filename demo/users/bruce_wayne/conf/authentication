@@ -1,0 +1,8 @@
+# Doorman configuration
+
+# Enabled modules (github,google,password)
+DOORMAN_MODULES=password
+
+# Password module configuration
+DOORMAN_PASSWORD_TOKEN='YuDmNVSNabkuYVG359SS'
+

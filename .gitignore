@@ -1,1 +1,5 @@
 .idea/
+
+#Keep special .gitkeep file, useful for tracking (yet) empty directories
+#http://stackoverflow.com/questions/8024924/gitignore-ignore-all-files-then-recursively-allow-foo
+!.gitkeep
