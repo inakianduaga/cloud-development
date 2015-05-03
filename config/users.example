@@ -1,0 +1,12 @@
+#
+# Users definitions list example
+#
+
+# List of users (must be prefix by `USER_` string)
+USER_CLARK_KENT=1
+USER_BRUCE_WAYNE=2
+
+# Webserver image suffix
+# The image cloud-webserver-<SUFFIX> will be used for this user
+WEBSERVER_CLARK_KENT=php
+WEBSERVER_BRUCE_WAYNE=nodejs

@@ -21,6 +21,11 @@ needs to be provided through an external configuration file, that will be popula
 So user `clark_kent` will have a total of 4 containers running, say 8080 for auth webserver, 8081 webserver, 8082 auth code editor,
 8083 code editor. And it has an id of 1, so it'll start on port 8080.
 
+#### Virtual hosts configuration
+
+The vhosts configuration for each hostname is generated dynamically on container startup using a
+[shared common template](./conf/nginx/directives/virtual_host_template.conf). This configuration is included in the main
+nginx http block.
 
 ## Container setup
 
