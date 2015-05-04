@@ -8,7 +8,7 @@
 ./bootstrap/build_demo_docker_images.sh
 
 # Add hosts file entry for each user
-./../scripts/populate_hosts.sh
+./bootstrap/populate_hosts.sh
 
 # Initialize containers for each user
 ./../scripts/launch_containers.sh

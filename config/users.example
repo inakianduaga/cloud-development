@@ -1,12 +1,22 @@
+#!/bin/bash
 #
 # Users definitions list example
 #
+#  - Users (must be prefix by `USER_` string)
+#
+#  - Webserver image suffix
+#    The image cloud-webserver-<SUFFIX> will be used for this user
+#    Leave empty for no webserver
+#
+#  - Editor image suffix
+#    The image cloud-editor-<SUFFIX> will be used for this user
+#    Leave empty for no editor
+#
 
-# List of users (must be prefix by `USER_` string)
 USER_CLARK_KENT=1
-USER_BRUCE_WAYNE=2
-
-# Webserver image suffix
-# The image cloud-webserver-<SUFFIX> will be used for this user
 WEBSERVER_CLARK_KENT=php
+EDITOR_CLARK_KENT=codebox
+
+USER_BRUCE_WAYNE=2
 WEBSERVER_BRUCE_WAYNE=nodejs
+EDITOR_BRUCE_WAYNE=codebox
