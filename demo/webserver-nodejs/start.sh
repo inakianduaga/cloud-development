@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 #update application and launch server
 /nodejs/bin/npm install

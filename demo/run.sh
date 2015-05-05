@@ -11,4 +11,4 @@
 ./bootstrap/populate_hosts.sh
 
 # Initialize containers for each user
-./../scripts/launch_containers.sh
+./bootstrap/launch_containers.sh
