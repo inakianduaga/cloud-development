@@ -15,6 +15,25 @@ function getDockerBridgeIp()
     echo $(ip route | awk '/docker0/ { print $NF }')
 }
 
+# Stop a docker container
+function stopDockerContainer()
+{
+    docker stop $1 > /dev/null 2>&1
+    docker rm $1 > /dev/null 2>&1
+}
+
+
+#
+# Launch frontend proxy
+#
+cloud_frontend_proxy='cloud-frontend-proxy'
+certs_path="${PWD}../certs"
+base_hostname=$(getConfigKey BASE_HOSTNAME)
+
+$(stopDockerContainer $cloud_frontend_proxy)
+docker run -d -p 80:80 -p 443:443 -v $certs_path:/etc/nginx/certs -e BASE_HOSTNAME=$base_hostname -e PROXY_HOST=$(getDockerBridgeIp) --name $cloud_frontend_proxy $cloud_frontend_proxy
+
+
 # Loop through each user, and for each launch 4 containers
 #
 # - Auth for webserver
@@ -52,23 +71,42 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # Remove webserver container and relaunch
-    docker stop $webserver_container_name > /dev/null 2>&1;
-    docker rm $webserver_container_name > /dev/null 2>&1
+    $(stopDockerContainer $webserver_container_name)
     docker run -d -p $webserver_container_port:$webserver_port -v $webserver_container_repo_path:$webserver_volume $webserver_docker_run_extras --name $webserver_container_name cloud-webserver-$webserver_type
 
     # Remove authentication container and relaunch
-    docker stop $authentication_container_name > /dev/null 2>&1;
-    docker rm $authentication_container_name > /dev/null 2>&1
+    $(stopDockerContainer $authentication_container_name)
     docker run -d -p $authentication_container_webserver_port:8085 --env-file $authentication_container_config_path -e DOORMAN_PROXY_HOST=$(getDockerBridgeIp) -e DOORMAN_PROXY_PORT=$webserver_container_port --name $authentication_container_name cloud-authentication
   fi
 
   # Lauch authentication / editor container pair
   if [ ! -z $(getUserEditor $USER) ]; then
-    echo "TODO"
+
+    # Editor config
+    editor_container_name=$(getEditorContainerNameByUser $USER)
+    editor_container_port=$(getEditorPortByUserId $ID)
+    editor_container_repo_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
+    editor_type=$(getUserEditor $USER)
+    editor_port=$(getUserEditorPort $USER)
+    editor_volume=$(getUserEditorVolume $USER)
+    editor_docker_run_extras=$(getUserEditorDockerCMDExtras $USER)
+
+    # Authentication server config
+    authentication_container_name=$(getEditorAuthenticationContainerNameByUser $USER)
+    authentication_container_editor_port=$(getAuthenticationEditorPortByUserId $ID)
+    authentication_container_config_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
+
+    # Remove editor container and relaunch
+    $(stopDockerContainer $editor_container_name)
+    docker run -d -p $editor_container_port:$editor_port -v $editor_container_repo_path:$editor_volume $editor_docker_run_extras --name $editor_container_name cloud-editor-$editor_type
+
+    # Remove authentication container and relaunch
+    $(stopDockerContainer $authentication_container_name)
+    docker run -d -p $authentication_container_editor_port:8085 --env-file $authentication_container_config_path -e DOORMAN_PROXY_HOST=$(getDockerBridgeIp) -e DOORMAN_PROXY_PORT=$editor_container_port --name $authentication_container_name cloud-authentication
+
   fi
 
 done
 
-# Launch frontend proxy
-# TODO
+
 

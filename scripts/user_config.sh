@@ -72,6 +72,36 @@ function getUserEditor()
 }
 
 #
+# The editor bind port for a given user
+# @param string user
+# @return int
+#
+function getUserEditorPort()
+{
+  echo $(getUserConfigProperty EDITOR_${1^^}_PORT)
+}
+
+#
+# The editor volume mount point for a given user
+# @param string user
+# @return string
+#
+function getUserEditorVolume()
+{
+  echo $(getUserConfigProperty EDITOR_${1^^}_VOLUME)
+}
+
+#
+# The editor docker run command extras for a given user
+# @param string user
+# @return string
+#
+function getUserEditorDockerCMDExtras()
+{
+  echo $(getUserConfigProperty EDITOR_${1^^}_DOCKER_CMD_EXTRAS)
+}
+
+#
 # Gets the starting port for the cloud containers
 # @return string
 #
