@@ -14,7 +14,7 @@ for description of each parameter
 
 ## Running
 
-Execute the `run.sh` script to start the demo environment. This will call several subscripts:
+Execute the [run.sh](./run.sh) script to start the demo environment. This will call several subscripts:
 
 - [Create](./bootstrap/build_demo_docker_images.sh) the required docker instances ,
 - [Update](./bootstrap/populate_hosts.sh) the local hosts file (tested Ubuntu only),
