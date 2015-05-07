@@ -27,7 +27,7 @@ function stopDockerContainer()
 # Launch frontend proxy
 #
 cloud_frontend_proxy='cloud-frontend-proxy'
-certs_path="${PWD}../certs"
+certs_path="${PWD}/../certificates"
 base_hostname=$(getConfigKey BASE_HOSTNAME)
 absolute_users_path="${PWD}/../config/users"
 $(stopDockerContainer $cloud_frontend_proxy)
