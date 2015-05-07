@@ -61,10 +61,11 @@ for p in ${USERS///$'\n'} ; do
   # Useful variables
   USER=${PREFIXED_USER#$USER_PREFIX}
   USER=${USER,,} # to lowercase
-  EDITOR_PORT=$(mapUserIdToStartingContainerPort $ID)
-  WEBSERVER_PORT=$(( $(mapUserIdToStartingContainerPort $ID) + 2))
+  AUTHENTICATION_EDITOR_PORT=$(( $(mapUserIdToStartingContainerPort $ID) + 1 ))
+  AUTHENTICATION_WEBSERVER_PORT=$(( $(mapUserIdToStartingContainerPort $ID) + 3 ))
 
-  echo "$(populateTemplate $USER $SUBDOMAIN_EDITOR_STRING $BASE_HOSTNAME $PROXY_HOST $EDITOR_PORT)"
-  echo "$(populateTemplate $USER $SUBDOMAIN_WEBSERVER_STRING $BASE_HOSTNAME $PROXY_HOST $WEBSERVER_PORT)"
+  # Bind to all authentication proxies
+  echo "$(populateTemplate $USER $SUBDOMAIN_EDITOR_STRING $BASE_HOSTNAME $PROXY_HOST $AUTHENTICATION_EDITOR_PORT)"
+  echo "$(populateTemplate $USER $SUBDOMAIN_WEBSERVER_STRING $BASE_HOSTNAME $PROXY_HOST $AUTHENTICATION_WEBSERVER_PORT)"
 
 done

@@ -5,7 +5,7 @@
 #
 
 CONFIG_PATH='./../config/config'
-USERS_PATH=.'/../config/users'
+USERS_PATH='./../config/users'
 
 # Import utils
 source ./../../scripts/user_config.sh
@@ -29,9 +29,9 @@ function stopDockerContainer()
 cloud_frontend_proxy='cloud-frontend-proxy'
 certs_path="${PWD}../certs"
 base_hostname=$(getConfigKey BASE_HOSTNAME)
-
+absolute_users_path="${PWD}/../config/users"
 $(stopDockerContainer $cloud_frontend_proxy)
-docker run -d -p 80:80 -p 443:443 -v $certs_path:/etc/nginx/certs -e BASE_HOSTNAME=$base_hostname -e PROXY_HOST=$(getDockerBridgeIp) --name $cloud_frontend_proxy $cloud_frontend_proxy
+docker run -d -p 80:80 -p 443:443 -v $certs_path:/etc/nginx/certs -e BASE_HOSTNAME=$base_hostname --env-file $absolute_users_path -e PROXY_HOST=$(getDockerBridgeIp) --name $cloud_frontend_proxy $cloud_frontend_proxy
 
 
 # Loop through each user, and for each launch 4 containers
