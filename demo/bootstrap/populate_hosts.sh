@@ -5,9 +5,11 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
 HOSTS_PATH='/etc/hosts'
-CONFIG_PATH='./../config/config'
-USERS_PATH='./../config/users'
+CONFIG_PATH="${CURRENT_DIR}/../config/config"
+USERS_PATH="${CURRENT_DIR}/../config/users"
 
 # Import utils
 source ./../../scripts/user_config.sh

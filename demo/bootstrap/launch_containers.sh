@@ -4,11 +4,12 @@
 # Launch docker containers for each user
 #
 
-CONFIG_PATH='./../config/config'
-USERS_PATH='./../config/users'
+CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CONFIG_PATH="${CURRENT_DIR}/../config/config"
+USERS_PATH="${CURRENT_DIR}/../config/users"
 
 # Import utils
-source ./../../scripts/user_config.sh
+source "${CURRENT_DIR}/../../scripts/user_config.sh"
 
 function getDockerBridgeIp()
 {
@@ -27,9 +28,9 @@ function stopDockerContainer()
 # Launch frontend proxy
 #
 cloud_frontend_proxy='cloud-frontend-proxy'
-certs_path="${PWD}/../certificates"
+certs_path="${CURRENT_DIR}/../certificates"
 base_hostname=$(getConfigKey BASE_HOSTNAME)
-absolute_users_path="${PWD}/../config/users"
+absolute_users_path="${CURRENT_DIR}/../config/users"
 $(stopDockerContainer $cloud_frontend_proxy)
 docker run -d -p 80:80 -p 443:443 -v $certs_path:/etc/nginx/certs -e BASE_HOSTNAME=$base_hostname --env-file $absolute_users_path -e PROXY_HOST=$(getDockerBridgeIp) --name $cloud_frontend_proxy $cloud_frontend_proxy
 
@@ -59,7 +60,7 @@ for p in ${USERS///$'\n'} ; do
     # Webserver config
     webserver_container_name=$(getWebserverContainerNameByUser $USER)
     webserver_container_port=$(getWebserverPortByUserId $ID)
-    webserver_container_repo_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
+    webserver_container_repo_path="${CURRENT_DIR}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
     webserver_type=$(getUserWebserver $USER)
     webserver_port=$(getUserWebserverPort $USER)
     webserver_volume=$(getUserWebserverVolume $USER)
@@ -68,7 +69,7 @@ for p in ${USERS///$'\n'} ; do
     # Authentication server config
     authentication_container_name=$(getWebserverAuthenticationContainerNameByUser $USER)
     authentication_container_webserver_port=$(getAuthenticationWebserverPortByUserId $ID)
-    authentication_container_config_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
+    authentication_container_config_path="${CURRENT_DIR}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # Remove webserver container and relaunch
     $(stopDockerContainer $webserver_container_name)
@@ -85,7 +86,7 @@ for p in ${USERS///$'\n'} ; do
     # Editor config
     editor_container_name=$(getEditorContainerNameByUser $USER)
     editor_container_port=$(getEditorPortByUserId $ID)
-    editor_container_repo_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
+    editor_container_repo_path="${CURRENT_DIR}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
     editor_type=$(getUserEditor $USER)
     editor_port=$(getUserEditorPort $USER)
     editor_volume=$(getUserEditorVolume $USER)
@@ -94,7 +95,7 @@ for p in ${USERS///$'\n'} ; do
     # Authentication server config
     authentication_container_name=$(getEditorAuthenticationContainerNameByUser $USER)
     authentication_container_editor_port=$(getAuthenticationEditorPortByUserId $ID)
-    authentication_container_config_path="${PWD}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
+    authentication_container_config_path="${CURRENT_DIR}$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # Remove editor container and relaunch
     $(stopDockerContainer $editor_container_name)
