@@ -55,10 +55,10 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # start/stop user webserver container
-    $ACTION cloud_webserver CONTAINER_PORT=$webserver_container_port PORT=$webserver_port CONTAINER_REPO_PATH=$webserver_container_repo_path VOLUME=$webserver_volume DOCKER_RUN_EXTRAS=$webserver_docker_run_extras CONTAINER_NAME=$webserver_container_name TYPE=$webserver_type
+    $ACTION cloud_webserver CONTAINER_PORT=$webserver_container_port PORT=$webserver_port CONTAINER_REPO_PATH=$webserver_container_repo_path VOLUME=$webserver_volume DOCKER_RUN_EXTRAS=$webserver_docker_run_extras CONTAINER_NAME=$webserver_container_name TYPE=$webserver_type DOCKER_INTERFACE=$DOCKER_INTERFACE
 
     # start/stop user webserver authentication container
-    $ACTION cloud_authentication CONTAINER_PORT=$authentication_container_webserver_port AUTHENTICATION_CONFIG_PATH=$authentication_container_config_path PROXY_HOST=$DOCKER_INTERFACE PROXY_PORT=$webserver_container_port CONTAINER_NAME=$authentication_container_name
+    $ACTION cloud_authentication CONTAINER_PORT=$authentication_container_webserver_port AUTHENTICATION_CONFIG_PATH=$authentication_container_config_path PROXY_HOST=$DOCKER_INTERFACE PROXY_PORT=$webserver_container_port CONTAINER_NAME=$authentication_container_name DOCKER_INTERFACE=$DOCKER_INTERFACE
   fi
 
   # Lauch authentication / editor container pair
@@ -79,10 +79,10 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # start/stop user editor container
-    $ACTION cloud_editor CONTAINER_PORT=$editor_container_port PORT=$editor_port CONTAINER_REPO_PATH=$editor_container_repo_path VOLUME=$editor_volume DOCKER_RUN_EXTRAS=$editor_docker_run_extras CONTAINER_NAME=$editor_container_name TYPE=$editor_type
+    $ACTION cloud_editor CONTAINER_PORT=$editor_container_port PORT=$editor_port CONTAINER_REPO_PATH=$editor_container_repo_path VOLUME=$editor_volume DOCKER_RUN_EXTRAS=$editor_docker_run_extras CONTAINER_NAME=$editor_container_name TYPE=$editor_type DOCKER_INTERFACE=$DOCKER_INTERFACE
 
     # start/stop user editor authentication container
-    $ACTION cloud_authentication CONTAINER_PORT=$authentication_container_editor_port AUTHENTICATION_CONFIG_PATH=$authentication_container_config_path PROXY_HOST=$DOCKER_INTERFACE PROXY_PORT=$editor_container_port CONTAINER_NAME=$authentication_container_name
+    $ACTION cloud_authentication CONTAINER_PORT=$authentication_container_editor_port AUTHENTICATION_CONFIG_PATH=$authentication_container_config_path PROXY_HOST=$DOCKER_INTERFACE PROXY_PORT=$editor_container_port CONTAINER_NAME=$authentication_container_name DOCKER_INTERFACE=$DOCKER_INTERFACE
 
   fi
 

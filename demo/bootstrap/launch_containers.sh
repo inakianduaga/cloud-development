@@ -72,11 +72,11 @@ for p in ${USERS///$'\n'} ; do
 
     # Remove webserver container and relaunch
     $(stopDockerContainer $webserver_container_name)
-    docker run -d -p $webserver_container_port:$webserver_port -v $webserver_container_repo_path:$webserver_volume $webserver_docker_run_extras --name $webserver_container_name cloud-webserver-$webserver_type
+    docker run -d -p $(getDockerBridgeIp):$webserver_container_port:$webserver_port -v $webserver_container_repo_path:$webserver_volume $webserver_docker_run_extras --name $webserver_container_name cloud-webserver-$webserver_type
 
     # Remove authentication container and relaunch
     $(stopDockerContainer $authentication_container_name)
-    docker run -d -p $authentication_container_webserver_port:8085 --env-file $authentication_container_config_path -e DOORMAN_PROXY_HOST=$(getDockerBridgeIp) -e DOORMAN_PROXY_PORT=$webserver_container_port --name $authentication_container_name cloud-authentication
+    docker run -d -p $(getDockerBridgeIp):$authentication_container_webserver_port:8085 --env-file $authentication_container_config_path -e DOORMAN_PROXY_HOST=$(getDockerBridgeIp) -e DOORMAN_PROXY_PORT=$webserver_container_port --name $authentication_container_name cloud-authentication
   fi
 
   # Lauch authentication / editor container pair
@@ -98,11 +98,11 @@ for p in ${USERS///$'\n'} ; do
 
     # Remove editor container and relaunch
     $(stopDockerContainer $editor_container_name)
-    docker run -d -p $editor_container_port:$editor_port -v $editor_container_repo_path:$editor_volume $editor_docker_run_extras --name $editor_container_name cloud-editor-$editor_type
+    docker run -d -p $(getDockerBridgeIp):$editor_container_port:$editor_port -v $editor_container_repo_path:$editor_volume $editor_docker_run_extras --name $editor_container_name cloud-editor-$editor_type
 
     # Remove authentication container and relaunch
     $(stopDockerContainer $authentication_container_name)
-    docker run -d -p $authentication_container_editor_port:8085 --env-file $authentication_container_config_path -e DOORMAN_PROXY_HOST=$(getDockerBridgeIp) -e DOORMAN_PROXY_PORT=$editor_container_port --name $authentication_container_name cloud-authentication
+    docker run -d -p $(getDockerBridgeIp):$authentication_container_editor_port:8085 --env-file $authentication_container_config_path -e DOORMAN_PROXY_HOST=$(getDockerBridgeIp) -e DOORMAN_PROXY_PORT=$editor_container_port --name $authentication_container_name cloud-authentication
 
   fi
 
