@@ -47,7 +47,7 @@ USERS="$(getUsers)"
 for p in ${USERS///$'\n'} ; do
 
   #http://stackoverflow.com/questions/10638538/split-string-with-bash-with-symbol
-  IFS== read PREFIXED_USER ID <<< $p;
+  IFS== read PREFIXED_USER ID <<< "$p";
 
   # Useful variables
   USER=${PREFIXED_USER#"USER_"}
