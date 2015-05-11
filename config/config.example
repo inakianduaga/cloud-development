@@ -11,10 +11,10 @@ BASE_HOSTNAME=localhost
 CLOUD_STARTING_PORT=8080
 
 # Subkey to indicate mapping to the editor in the hostname (like user.edit.localhost)
-SUBDOMAIN_EDITOR_STRING='edit'
+SUBDOMAIN_EDITOR_STRING=edit
 
 # Subkey to indicate mapping to the view in the hostname (like user.view.localhost)
-SUBDOMAIN_WEBSERVER_STRING='view'
+SUBDOMAIN_WEBSERVER_STRING=view
 
 # Path to the starting folder that contains users content/config
 BASE_CLOUD_USERS_FOLDER='/var/cloud/users/'

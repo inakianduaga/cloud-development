@@ -1,18 +1,15 @@
 #!/bin/bash
-
 #
 # Generates the nginx virtual hosts configuration to redirect requests to the proper container
 #
 # Convention:
 #
 # - Each user has *4* containers allocated
-# - the starting port for *id = 1* is *8080*
+# - the starting port for *id = 1* is *$CLOUD_STARTING_PORT*
 #
 
-USER_PREFIX='USER_'
-SUBDOMAIN_EDITOR_STRING='edit'
-SUBDOMAIN_WEBSERVER_STRING='view'
 VIRTUAL_HOSTS_TEMPLATE_CONF='/etc/nginx/directives/virtual_host_template.conf'
+USER_PREFIX='USER_'
 BASE_HOSTNAME=${BASE_HOSTNAME:-localhost}
 if [ -z $PROXY_HOST ]; then
     PROXY_HOST=`/sbin/ip route|awk '/default/ { print $3 }'`
@@ -23,7 +20,48 @@ fi
 # @return integer
 function mapUserIdToStartingContainerPort()
 {
-  echo $(( 8080 + 4 * ($1 - 1) ))
+  local starting_port=$CLOUD_STARTING_PORT
+  echo $(( $starting_port + 4 * ($1 - 1) ))
+}
+
+#
+# The webserver container port for a given user id
+# @param int id
+# @return int
+#
+function getWebserverPortByUserId()
+{
+  echo $(( $(mapUserIdToStartingContainerPort $1) + 2 ))
+}
+
+#
+# The webserver authentication container port for a given user id
+# @param int id
+# @return int
+#
+function getAuthenticationWebserverPortByUserId()
+{
+  echo $(( $(mapUserIdToStartingContainerPort $1) + 3 ))
+}
+
+#
+# The editor container port for a given user id
+# @param int id
+# @return int
+#
+function getEditorPortByUserId()
+{
+  echo $(mapUserIdToStartingContainerPort $1)
+}
+
+#
+# The editor authentication container port for a given user id
+# @param int id
+# @return int
+#
+function getAuthenticationEditorPortByUserId()
+{
+  echo $(( $(mapUserIdToStartingContainerPort $1) + 1 ))
 }
 
 # Returns the vhosts template populated with the input variables
@@ -61,11 +99,11 @@ for p in ${USERS///$'\n'} ; do
   # Useful variables
   USER=${PREFIXED_USER#$USER_PREFIX}
   USER=${USER,,} # to lowercase
-  AUTHENTICATION_EDITOR_PORT=$(( $(mapUserIdToStartingContainerPort $ID) + 1 ))
-  AUTHENTICATION_WEBSERVER_PORT=$(( $(mapUserIdToStartingContainerPort $ID) + 3 ))
+  AUTHENTICATION_EDITOR_PORT=$(getAuthenticationEditorPortByUserId $ID)
+  AUTHENTICATION_WEBSERVER_PORT=$(getAuthenticationWebserverPortByUserId $ID)
 
   # Bind to all authentication proxies
-  echo "$(populateTemplate $USER $SUBDOMAIN_EDITOR_STRING $BASE_HOSTNAME $PROXY_HOST $AUTHENTICATION_EDITOR_PORT)"
-  echo "$(populateTemplate $USER $SUBDOMAIN_WEBSERVER_STRING $BASE_HOSTNAME $PROXY_HOST $AUTHENTICATION_WEBSERVER_PORT)"
+  echo "$(populateTemplate $USER "$SUBDOMAIN_EDITOR_STRING" $BASE_HOSTNAME $PROXY_HOST $AUTHENTICATION_EDITOR_PORT)"
+  echo "$(populateTemplate $USER "$SUBDOMAIN_WEBSERVER_STRING" $BASE_HOSTNAME $PROXY_HOST $AUTHENTICATION_WEBSERVER_PORT)"
 
 done

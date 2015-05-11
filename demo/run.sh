@@ -4,6 +4,8 @@
 # Bootstraps the demo environment
 #
 
+set -e
+
 # Build required docker images
 ./bootstrap/build_demo_docker_images.sh
 

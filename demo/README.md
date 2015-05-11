@@ -36,8 +36,8 @@ https://clark_kent.edit.localhost
 Doorman has been pre-configured with a simple password authentication for each of the users user
 
 ```
-clark_kent :CFcPHRKC86CNaZwWj8Da
 bruce_wayne: YuDmNVSNabkuYVG359SS
+clark_kent :CFcPHRKC86CNaZwWj8Da
 ```
 
 ### Notes:
