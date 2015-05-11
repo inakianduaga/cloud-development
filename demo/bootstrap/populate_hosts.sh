@@ -7,41 +7,13 @@ fi
 
 HOSTS_PATH='/etc/hosts'
 CONFIG_PATH='./../config/config'
-USERS_PATH=.'/../config/users'
-SUBDOMAIN_EDITOR_STRING='edit'
-SUBDOMAIN_WEBSERVER_STRING='view'
+USERS_PATH='./../config/users'
 
+# Import utils
+source ./../../scripts/user_config.sh
 
-# Returns the list of users by reading the user list
-function getUsers()
-{
-  source $USERS_PATH
-  echo $(set -o posix ; set | grep "USER_")
-}
-
-#
-# Returns the webserver for a given user
-# @param string user
-# @return string
-#
-function getUserWebserver()
-{
-  source $USERS_PATH
-  local property=WEBSERVER_${1}
-  echo ${!property}
-}
-
-#
-# Returns the editor for a given user
-# @param string user
-# @return string
-#
-function getUserEditor()
-{
-  source $USERS_PATH
-  local property=EDITOR_${1}
-  echo ${!property}
-}
+SUBDOMAIN_EDITOR_STRING=$(getConfigKey SUBDOMAIN_EDITOR_STRING)
+SUBDOMAIN_WEBSERVER_STRING=$(getConfigKey SUBDOMAIN_WEBSERVER_STRING)
 
 #
 # Adds an entry to the hostnames file (if it's not already included)
@@ -61,19 +33,19 @@ USERS="$(getUsers)"
 for p in ${USERS///$'\n'} ; do
 
   #http://stackoverflow.com/questions/10638538/split-string-with-bash-with-symbol
-  IFS== read PREFIXED_USER ID <<< $p;
+  IFS== read PREFIXED_USER ID <<< "$p";
 
   # Useful variables
   USER=${PREFIXED_USER#"USER_"}
   USER=${USER,,} # to lowercase
 
   # Add webserver host entry
-  if [ -z $(getUserWebserver $USER) ]; then
+  if [ ! -z $(getUserWebserver $USER) ]; then
     $(addHostEntryByPrefix "${USER}.${SUBDOMAIN_WEBSERVER_STRING}")
   fi
 
   # Add editor host
-  if [ -z $(getUserEditor $USER) ]; then
+  if [ ! -z $(getUserEditor $USER) ]; then
     $(addHostEntryByPrefix "${USER}.${SUBDOMAIN_EDITOR_STRING}")
   fi
 
