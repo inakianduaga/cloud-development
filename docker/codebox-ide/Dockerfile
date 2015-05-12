@@ -1,0 +1,1 @@
+from inakianduaga/docker-codeboxide:latest

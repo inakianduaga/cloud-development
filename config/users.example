@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Users definitions list example
+#
+#  - Users (must be prefix by `USER_` string)
+#  - User Webserver properties: Prefixed by WEBSERVER_
+#  - User Editor properties: Prefix by EDITOR_
+#
+
+USER_CLARK_KENT=1                                # user name and id (prefix USER_)
+WEBSERVER_CLARK_KENT=php                         # the webserver container image suffix
+WEBSERVER_CLARK_KENT_PORT=80                     # webserver internal listening port
+WEBSERVER_CLARK_KENT_VOLUME=/var/www/html        # webserver internal app volume path
+WEBSERVER_CLARK_KENT_DOCKER_CMD_EXTRAS=          # webserver extra docker run
+EDITOR_CLARK_KENT=codebox                        # editor container image suffix
+EDITOR_CLARK_KENT_PORT=8000                      # editor internal listening port
+EDITOR_CLARK_KENT_VOLUME=/var/www                # editor internal app volume
+EDITOR_CLARK_KENT_DOCKER_CMD_EXTRAS=             # editor extra docker run
+
+USER_BRUCE_WAYNE=2
+WEBSERVER_BRUCE_WAYNE=nodejs
+WEBSERVER_BRUCE_WAYNE_PORT=3000
+WEBSERVER_BRUCE_WAYNE_VOLUME=/app
+WEBSERVER_BRUCE_WAYNE_DOCKER_CMD_EXTRAS=
+EDITOR_BRUCE_WAYNE=codebox
+EDITOR_BRUNCE_WAYNE_PORT=8000
+EDITOR_BRUNCE_WAYNE_VOLUME=/var/www
+EDITOR_BRUNCE_WAYNE_DOCKER_CMD_EXTRAS=
