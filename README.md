@@ -80,10 +80,10 @@ The following diagram shows the docker container structure, starting with a host
                                                        with containers
 ```
 
-### Request routing diagram
+### Requests lifecycle
 
 The following example shows the routing structure for an external request that by convention requests the webserver for *user1*. Only
-the *frontend-proxy container* listens to the outside world, the rest of the containers listen to the docker0 network interface.
+the *frontend-proxy container* listens to the outside world, the rest of the containers listen on the internal docker0 network interface.
 
 1. The frontend proxy receives the request and proxies it to the corresponding *user1 webserver auth container* that is listening
   on the docker0 interface
