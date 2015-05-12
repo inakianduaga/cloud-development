@@ -1,4 +1,4 @@
-Multi-user Cloud Development
+Multi-user cloud development
 ============================
 
 > Dockerized multi-user capable environment to edit and preview server-based applications (php/nodejs)
