@@ -18,3 +18,6 @@ SUBDOMAIN_WEBSERVER_STRING=view
 
 # Path to the starting folder that contains users content/config
 BASE_CLOUD_USERS_FOLDER='/var/cloud/users/'
+
+# optional frontend proxy extra docker command on container initialization
+FRONTEND_PROXY_DOCKER_CMD_EXTRAS=
