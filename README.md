@@ -1,5 +1,5 @@
-Cloud development toolkit
-=========================
+Multi-user Cloud development
+============================
 
 > Dockerized multi-user capable environment to edit and preview server-based applications (php/nodejs)
 
