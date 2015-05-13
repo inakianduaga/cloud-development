@@ -8,6 +8,6 @@ printf "----------------------------------"
 printf "Building docker images..."
 printf "----------------------------------"
 
-docker build -t cloud-frontend-proxy ./../frontend-proxy/
-docker build -t cloud-authentication ./../doorman-auth/
+docker build -t cloud-frontend-proxy ./../docker/frontend-proxy/
+docker build -t cloud-authentication ./../docker/doorman-auth/
 
