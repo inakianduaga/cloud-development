@@ -16,3 +16,4 @@ SUBDOMAIN_WEBSERVER_STRING=view
 
 # Path to the starting folder that contains users content/config (for this we make it relative to the demo scripts path)
 BASE_CLOUD_USERS_FOLDER=/../users/
+

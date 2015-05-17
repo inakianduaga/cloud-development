@@ -14,12 +14,14 @@ source $USERS_UTIL_PATH
 # Derived variables
 BASE_HOSTNAME=$(getConfigKey BASE_HOSTNAME)
 FRONTEND_PROXY_DOCKER_CMD_EXTRAS=$(getConfigKey FRONTEND_PROXY_DOCKER_CMD_EXTRAS)
+# Encode potential whitespace since upstart doesn't accept whitespace in env variables
+FRONTEND_PROXY_DOCKER_CMD_EXTRAS=${FRONTEND_PROXY_DOCKER_CMD_EXTRAS// /\*}
 DOCKER_INTERFACE=$(ip route | awk '/docker0/ { print $NF }')
 
 #
 # Start/stop frontend proxy
 #
-$ACTION cloud_frontend_proxy CERTIFICATES_PATH=$FRONTEND_PROXY_CERTIFICATES_PATH CONFIG_PATH=$CONFIG_PATH USERS_CONFIG_PATH=$USERS_PATH PROXY_HOST=$DOCKER_INTERFACE DOCKER_CMD_EXTRAS=$FRONTEND_PROXY_DOCKER_CMD_EXTRAS
+$ACTION cloud_frontend_proxy CERTIFICATES_PATH=$FRONTEND_PROXY_CERTIFICATES_PATH CONFIG_PATH=$CONFIG_PATH USERS_CONFIG_PATH=$USERS_PATH PROXY_HOST=$DOCKER_INTERFACE DOCKER_RUN_EXTRAS=$FRONTEND_PROXY_DOCKER_CMD_EXTRAS
 
 #
 # Loop over all users
@@ -45,6 +47,8 @@ for p in ${USERS///$'\n'} ; do
     webserver_port=$(getUserWebserverPort $USER)
     webserver_volume=$(getUserWebserverVolume $USER)
     webserver_docker_run_extras=$(getUserWebserverDockerCMDExtras $USER)
+    # Encode potential whitespace since upstart doesn't accept whitespace in env variables
+    webserver_docker_run_extras=${webserver_docker_run_extras// /\*}
 
     # Authentication server config
     authentication_container_name=$(getWebserverAuthenticationContainerNameByUser $USER)
@@ -69,6 +73,9 @@ for p in ${USERS///$'\n'} ; do
     editor_port=$(getUserEditorPort $USER)
     editor_volume=$(getUserEditorVolume $USER)
     editor_docker_run_extras=$(getUserEditorDockerCMDExtras $USER)
+    # Encode potential whitespace since upstart doesn't accept whitespace in env variables
+    editor_docker_run_extras=${editor_docker_run_extras// /\*}
+
 
     # Authentication server config
     authentication_container_name=$(getEditorAuthenticationContainerNameByUser $USER)

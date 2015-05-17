@@ -21,3 +21,8 @@ BASE_CLOUD_USERS_FOLDER='/var/cloud/users/'
 
 # optional frontend proxy extra docker command on container initialization
 FRONTEND_PROXY_DOCKER_CMD_EXTRAS=
+
+# Convert Dash to Hypens in frontend proxy's virtual hosts
+# This is needed when using Google Auth with usernames of the form firstname_lastname because oauth 2 doesn't allow
+# underscores on the oauth callback url
+FRONTEND_PROXY_VHOSTS_CONVERT_UNDERSCORE_TO_HYPENS=false
