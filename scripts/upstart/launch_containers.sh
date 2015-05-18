@@ -14,14 +14,30 @@ source $USERS_UTIL_PATH
 # Derived variables
 BASE_HOSTNAME=$(getConfigKey BASE_HOSTNAME)
 FRONTEND_PROXY_DOCKER_CMD_EXTRAS=$(getConfigKey FRONTEND_PROXY_DOCKER_CMD_EXTRAS)
-# Encode potential whitespace since upstart doesn't accept whitespace in env variables
-FRONTEND_PROXY_DOCKER_CMD_EXTRAS=${FRONTEND_PROXY_DOCKER_CMD_EXTRAS// /\*}
 DOCKER_INTERFACE=$(ip route | awk '/docker0/ { print $NF }')
+
+
+#
+# "Escapes" the input characters by substituting them with plain strings
+# This is because upstart doesn't seem to like certain characters in its env variables
+
+# @param string
+# @return string
+#
+function escapeSpecialChars()
+{
+  local escaped=${1// /\SPACE}
+  escaped=${escaped//-/HYPHEN}
+  escaped=${escaped//:/COLON}
+
+  echo $escaped
+}
+
 
 #
 # Start/stop frontend proxy
 #
-$ACTION cloud_frontend_proxy CERTIFICATES_PATH=$FRONTEND_PROXY_CERTIFICATES_PATH CONFIG_PATH=$CONFIG_PATH USERS_CONFIG_PATH=$USERS_PATH PROXY_HOST=$DOCKER_INTERFACE DOCKER_RUN_EXTRAS=$FRONTEND_PROXY_DOCKER_CMD_EXTRAS
+$ACTION cloud_frontend_proxy CERTIFICATES_PATH=$FRONTEND_PROXY_CERTIFICATES_PATH CONFIG_PATH=$CONFIG_PATH DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$FRONTEND_PROXY_DOCKER_CMD_EXTRAS") USERS_CONFIG_PATH=$USERS_PATH PROXY_HOST=$DOCKER_INTERFACE
 
 #
 # Loop over all users
@@ -47,8 +63,6 @@ for p in ${USERS///$'\n'} ; do
     webserver_port=$(getUserWebserverPort $USER)
     webserver_volume=$(getUserWebserverVolume $USER)
     webserver_docker_run_extras=$(getUserWebserverDockerCMDExtras $USER)
-    # Encode potential whitespace since upstart doesn't accept whitespace in env variables
-    webserver_docker_run_extras=${webserver_docker_run_extras// /\*}
 
     # Authentication server config
     authentication_container_name=$(getWebserverAuthenticationContainerNameByUser $USER)
@@ -56,7 +70,7 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # start/stop user webserver container
-    $ACTION cloud_webserver CONTAINER_PORT=$webserver_container_port PORT=$webserver_port CONTAINER_REPO_PATH=$webserver_container_repo_path VOLUME=$webserver_volume DOCKER_RUN_EXTRAS=$webserver_docker_run_extras CONTAINER_NAME=$webserver_container_name TYPE=$webserver_type DOCKER_INTERFACE=$DOCKER_INTERFACE
+    $ACTION cloud_webserver CONTAINER_PORT=$webserver_container_port PORT=$webserver_port CONTAINER_REPO_PATH=$webserver_container_repo_path VOLUME=$webserver_volume DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$webserver_docker_run_extras") CONTAINER_NAME=$webserver_container_name TYPE=$webserver_type DOCKER_INTERFACE=$DOCKER_INTERFACE
 
     # start/stop user webserver authentication container
     $ACTION cloud_authentication CONTAINER_PORT=$authentication_container_webserver_port AUTHENTICATION_CONFIG_PATH=$authentication_container_config_path PROXY_HOST=$DOCKER_INTERFACE PROXY_PORT=$webserver_container_port CONTAINER_NAME=$authentication_container_name DOCKER_INTERFACE=$DOCKER_INTERFACE
@@ -73,9 +87,6 @@ for p in ${USERS///$'\n'} ; do
     editor_port=$(getUserEditorPort $USER)
     editor_volume=$(getUserEditorVolume $USER)
     editor_docker_run_extras=$(getUserEditorDockerCMDExtras $USER)
-    # Encode potential whitespace since upstart doesn't accept whitespace in env variables
-    editor_docker_run_extras=${editor_docker_run_extras// /\*}
-
 
     # Authentication server config
     authentication_container_name=$(getEditorAuthenticationContainerNameByUser $USER)
@@ -83,7 +94,7 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # start/stop user editor container
-    $ACTION cloud_editor CONTAINER_PORT=$editor_container_port PORT=$editor_port CONTAINER_REPO_PATH=$editor_container_repo_path VOLUME=$editor_volume DOCKER_RUN_EXTRAS=$editor_docker_run_extras CONTAINER_NAME=$editor_container_name TYPE=$editor_type DOCKER_INTERFACE=$DOCKER_INTERFACE
+    $ACTION cloud_editor CONTAINER_PORT=$editor_container_port PORT=$editor_port CONTAINER_REPO_PATH=$editor_container_repo_path VOLUME=$editor_volume DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$editor_docker_run_extras") CONTAINER_NAME=$editor_container_name TYPE=$editor_type DOCKER_INTERFACE=$DOCKER_INTERFACE
 
     # start/stop user editor authentication container
     $ACTION cloud_authentication CONTAINER_PORT=$authentication_container_editor_port AUTHENTICATION_CONFIG_PATH=$authentication_container_config_path PROXY_HOST=$DOCKER_INTERFACE PROXY_PORT=$editor_container_port CONTAINER_NAME=$authentication_container_name DOCKER_INTERFACE=$DOCKER_INTERFACE
