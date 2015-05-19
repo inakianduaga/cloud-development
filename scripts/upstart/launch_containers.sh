@@ -51,8 +51,8 @@ function escapeSpecialChars()
 #
 function removeContainer()
 {
-    /usr/bin/docker stop $1 || true
-    /usr/bin/docker rm $1 || true
+    /usr/bin/docker stop $1 > /dev/null 2>&1
+    /usr/bin/docker rm $1 > /dev/null 2>&1
 }
 
 #
@@ -77,7 +77,7 @@ function launchFrontendProxy()
     if [ $MODE = "direct" ] ; then
         $(removeContainer "cloud-frontend-proxy")
         if [ $ACTION = "start" ] ; then
-            /usr/bin/docker docker run --rm -p 80:80 -p 443:443 -v $CERTIFICATES_PATH:/etc/nginx/certs --env-file $CONFIG_PATH --env-file $USERS_CONFIG_PATH -e PROXY_HOST=$PROXY_HOST $DOCKER_RUN_EXTRAS --name cloud-frontend-proxy cloud-frontend-proxy
+            /usr/bin/docker run -d --rm -p 80:80 -p 443:443 -v $CERTIFICATES_PATH:/etc/nginx/certs --env-file $CONFIG_PATH --env-file $USERS_CONFIG_PATH -e PROXY_HOST=$PROXY_HOST $DOCKER_RUN_EXTRAS --name cloud-frontend-proxy cloud-frontend-proxy
         fi
     else
         $ACTION cloud_frontend_proxy CERTIFICATES_PATH=$CERTIFICATES_PATH CONFIG_PATH=$CONFIG_PATH DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$DOCKER_RUN_EXTRAS") USERS_CONFIG_PATH=$USERS_CONFIG_PATH PROXY_HOST=$PROXY_HOST
@@ -108,7 +108,7 @@ function launchAuthentication()
     if [ $MODE = "direct" ] ; then
         $(removeContainer "$CONTAINER_NAME")
         if [ $ACTION = "start" ] ; then
-            /usr/bin/docker run --rm -p $DOCKER_INTERFACE:$CONTAINER_PORT:8085 --env-file $AUTHENTICATION_CONFIG_PATH -e DOORMAN_PROXY_HOST=$PROXY_HOST -e DOORMAN_PROXY_PORT=$PROXY_PORT --name $CONTAINER_NAME cloud-authentication
+            /usr/bin/docker run -d --rm -p $DOCKER_INTERFACE:$CONTAINER_PORT:8085 --env-file $AUTHENTICATION_CONFIG_PATH -e DOORMAN_PROXY_HOST=$PROXY_HOST -e DOORMAN_PROXY_PORT=$PROXY_PORT --name $CONTAINER_NAME cloud-authentication
         fi
     else
         $ACTION cloud_authentication CONTAINER_PORT=$CONTAINER_PORT AUTHENTICATION_CONFIG_PATH=$AUTHENTICATION_CONFIG_PATH PROXY_HOST=$PROXY_HOST PROXY_PORT=$PROXY_PORT CONTAINER_NAME=$CONTAINER_NAME DOCKER_INTERFACE=$DOCKER_INTERFACE
@@ -143,7 +143,7 @@ function launchEditor()
     if [ $MODE = "direct" ] ; then
         $(removeContainer "$CONTAINER_NAME")
         if [ $ACTION = "start" ] ; then
-            /usr/bin/docker docker run --rm -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME cloud-editor-$TYPE
+            /usr/bin/docker run -d --rm -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME cloud-editor-$TYPE
         fi
     else
         $ACTION cloud_editor CONTAINER_PORT=$CONTAINER_PORT PORT=$PORT CONTAINER_REPO_PATH=$CONTAINER_REPO_PATH VOLUME=$VOLUME DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$DOCKER_RUN_EXTRAS") CONTAINER_NAME=$CONTAINER_NAME TYPE=$TYPE DOCKER_INTERFACE=$DOCKER_INTERFACE
@@ -178,7 +178,7 @@ function launchWebserver()
     if [ $MODE = "direct" ] ; then
         $(removeContainer "$CONTAINER_NAME")
         if [ $ACTION = "start" ] ; then
-            /usr/bin/docker docker run --rm -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME cloud-webserver-$TYPE
+            /usr/bin/docker docker run -d --rm -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME cloud-webserver-$TYPE
         fi
     else
         $ACTION cloud_webserver CONTAINER_PORT=$CONTAINER_PORT PORT=$PORT CONTAINER_REPO_PATH=$CONTAINER_REPO_PATH VOLUME=$VOLUME DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$DOCKER_RUN_EXTRAS") CONTAINER_NAME=$CONTAINER_NAME TYPE=$TYPE DOCKER_INTERFACE=$DOCKER_INTERFACE
