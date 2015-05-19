@@ -193,7 +193,7 @@ function launchWebserver()
 #
 # Start/stop frontend proxy
 #
-$(launchFrontendProxy "$FRONTEND_PROXY_CERTIFICATES_PATH" "$CONFIG_PATH" "$FRONTEND_PROXY_DOCKER_CMD_EXTRAS" "$USERS_PATH" "$DOCKER_INTERFACE")
+launchFrontendProxy "$FRONTEND_PROXY_CERTIFICATES_PATH" "$CONFIG_PATH" "$FRONTEND_PROXY_DOCKER_CMD_EXTRAS" "$USERS_PATH" "$DOCKER_INTERFACE"
 
 #
 # Loop over all users
@@ -226,10 +226,10 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # start/stop user webserver container
-    $(launchWebserver "$webserver_container_port" "$webserver_port" "$webserver_container_repo_path" "$webserver_volume" "$webserver_docker_run_extras" "$webserver_container_name" "$webserver_type" "$DOCKER_INTERFACE")
+    launchWebserver "$webserver_container_port" "$webserver_port" "$webserver_container_repo_path" "$webserver_volume" "$webserver_docker_run_extras" "$webserver_container_name" "$webserver_type" "$DOCKER_INTERFACE"
 
     # start/stop user webserver authentication container
-    $(launchAuthentication "$authentication_container_webserver_port" "$authentication_container_config_path" "$DOCKER_INTERFACE" "$webserver_container_port" "$authentication_container_name" "$DOCKER_INTERFACE")
+    launchAuthentication "$authentication_container_webserver_port" "$authentication_container_config_path" "$DOCKER_INTERFACE" "$webserver_container_port" "$authentication_container_name" "$DOCKER_INTERFACE"
   fi
 
   # Lauch authentication / editor container pair
@@ -250,10 +250,10 @@ for p in ${USERS///$'\n'} ; do
     authentication_container_config_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/conf/authentication"
 
     # start/stop user editor container
-    $(launchEditor "$editor_container_port" "$editor_port" "$editor_container_repo_path" "$editor_volume" "$editor_docker_run_extras" "$editor_container_name" "$editor_type" "$DOCKER_INTERFACE")
+    launchEditor "$editor_container_port" "$editor_port" "$editor_container_repo_path" "$editor_volume" "$editor_docker_run_extras" "$editor_container_name" "$editor_type" "$DOCKER_INTERFACE"
 
     # start/stop user editor authentication container
-    $(launchAuthentication "$authentication_container_editor_port" "$authentication_container_config_path" "$DOCKER_INTERFACE" "$editor_container_port" "$authentication_container_name" "$DOCKER_INTERFACE")
+    launchAuthentication "$authentication_container_editor_port" "$authentication_container_config_path" "$DOCKER_INTERFACE" "$editor_container_port" "$authentication_container_name" "$DOCKER_INTERFACE"
   fi
 
 done
