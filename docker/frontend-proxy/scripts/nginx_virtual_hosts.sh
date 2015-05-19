@@ -11,6 +11,8 @@
 VIRTUAL_HOSTS_TEMPLATE_CONF='/etc/nginx/directives/virtual_host_template.conf'
 USER_PREFIX='USER_'
 BASE_HOSTNAME=${BASE_HOSTNAME:-localhost}
+FRONTEND_PROXY_VHOSTS_CONVERT_UNDERSCORE_TO_HYPENS=${FRONTEND_PROXY_VHOSTS_CONVERT_UNDERSCORE_TO_HYPENS:-false}
+
 if [ -z $PROXY_HOST ]; then
     PROXY_HOST=`/sbin/ip route|awk '/default/ { print $3 }'`
 fi
@@ -75,6 +77,11 @@ function populateTemplate()
     local PROXY_PORT_PLACEHOLDER=$5
 
     local TEMPLATE=$(<$VIRTUAL_HOSTS_TEMPLATE_CONF)
+
+    # Optionally map underscores to hyphens on vhost
+    if [ "$FRONTEND_PROXY_VHOSTS_CONVERT_UNDERSCORE_TO_HYPENS" = true ] ; then
+       USER_PLACEHOLDER=${USER_PLACEHOLDER//_/-}
+    fi
 
     # Replace placeholders
     TEMPLATE=${TEMPLATE/USER_PLACEHOLDER/$USER_PLACEHOLDER}
