@@ -21,6 +21,23 @@ function getUserConfigProperty()
 }
 
 #
+# Updates the user config file property
+#
+# @param string PROPERTY
+# @param string VALUE
+#
+# @link http://stackoverflow.com/questions/8822097/how-to-replace-whole-line-with-sed
+#
+function setUserConfigProperty()
+{
+    #Read arguments
+    local PROPERTY=$1
+    local VALUE=$2
+
+    sed -i "/^${PROPERTY}=/c${PROPERTY}=${VALUE}" $USERS_PATH
+}
+
+#
 # Returns the webserver for a given user
 # @param string user
 # @return string
@@ -29,6 +46,21 @@ function getUserWebserver()
 {
   local user=${1^^}
   echo $(getUserConfigProperty WEBSERVER_${1^^})
+}
+
+#
+# Updates config's webserver for a given user
+#
+# @param string USER
+# @param string VALUE
+#
+function setUserWebserver()
+{
+    #Read arguments
+    local USER=$1
+    local VALUE=$2
+
+    setUserConfigProperty WEBSERVER_${USER} $VALUE
 }
 
 #
@@ -42,6 +74,21 @@ function getUserWebserverPort()
 }
 
 #
+# Updates config's webserver port for a given user
+#
+# @param string USER
+# @param string VALUE
+#
+function setUserWebserverPort()
+{
+    #Read arguments
+    local USER=$1
+    local VALUE=$2
+
+    setUserConfigProperty WEBSERVER_${USER}_PORT $VALUE
+}
+
+#
 # The webserver volume mount point for a given user
 # @param string user
 # @return string
@@ -49,6 +96,21 @@ function getUserWebserverPort()
 function getUserWebserverVolume()
 {
   echo $(getUserConfigProperty WEBSERVER_${1^^}_VOLUME)
+}
+
+#
+# Updates config's webserver volume for a given user
+#
+# @param string USER
+# @param string VALUE
+#
+function setUserWebserverVolume()
+{
+    #Read arguments
+    local USER=$1
+    local VALUE=$2
+
+    setUserConfigProperty WEBSERVER_${USER}_VOLUME $VALUE
 }
 
 #
@@ -60,6 +122,22 @@ function getUserWebserverDockerCMDExtras()
 {
   echo $(getUserConfigProperty WEBSERVER_${1^^}_DOCKER_CMD_EXTRAS)
 }
+
+#
+# Updates config's webserver docker cmd extras for a given user
+#
+# @param string USER
+# @param string VALUE
+#
+function setUserWebserverDockerCMDExtras()
+{
+    #Read arguments
+    local USER=$1
+    local VALUE=$2
+
+    setUserConfigProperty WEBSERVER_${USER}_DOCKER_CMD_EXTRAS $VALUE
+}
+
 
 #
 # Returns the editor for a given user
