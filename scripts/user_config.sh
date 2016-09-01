@@ -110,7 +110,7 @@ function setUserWebserverVolume()
     local USER=$1
     local VALUE=$2
 
-    setUserConfigProperty WEBSERVER_${USER}_VOLUME $VALUE
+    setUserConfigProperty WEBSERVER_${USER}_VOLUME "$VALUE"
 }
 
 #
@@ -135,7 +135,7 @@ function setUserWebserverDockerCMDExtras()
     local USER=$1
     local VALUE=$2
 
-    setUserConfigProperty WEBSERVER_${USER}_DOCKER_CMD_EXTRAS $VALUE
+    setUserConfigProperty WEBSERVER_${USER}_DOCKER_CMD_EXTRAS "'$VALUE'"
 }
 
 

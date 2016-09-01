@@ -32,15 +32,14 @@ PORT=$3;
 VOLUME=$4;
 DOCKER_CMD_EXTRAS=$5
 
-
 # Update Config
 
 $(setUserWebserver $USER $DOCKER_IMAGE)
 $(setUserWebserverPort $USER $PORT)
 $(setUserWebserverVolume $USER $VOLUME)
-$(setUserWebserverDockerCMDExtras $USER $DOCKER_CMD_EXTRAS)
+$(setUserWebserverDockerCMDExtras $USER "$DOCKER_CMD_EXTRAS")
 
 
 # Relaunch server
 
-#$(refreshWebserverFromConfigForUser $USER)
+$(refreshWebserverFromConfigForUser $USER)
