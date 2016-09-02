@@ -171,9 +171,10 @@ function launchWebserver()
 #
 function refreshWebserverFromConfigForUser()
 {
-    local USER=$1
+    local USER=${1,,}
     local MODE="direct"
     local ACTION="start"
+    local DOCKER_INTERFACE=$(ip route | awk '/docker0/ { print $NF }')
 
     # Webserver config
     webserver_container_name=$(getWebserverContainerNameByUser $USER)
