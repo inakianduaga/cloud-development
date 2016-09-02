@@ -158,7 +158,7 @@ function launchWebserver()
     if [ $MODE = "direct" ] ; then
         $(removeContainer "$CONTAINER_NAME")
         if [ $ACTION = "start" ] ; then
-            /usr/bin/docker run -d -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME cloud-webserver-$TYPE
+            /usr/bin/docker run -d -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME $TYPE
         fi
     else
         $ACTION cloud_webserver CONTAINER_PORT=$CONTAINER_PORT PORT=$PORT CONTAINER_REPO_PATH=$CONTAINER_REPO_PATH VOLUME=$VOLUME DOCKER_RUN_EXTRAS=$(escapeSpecialChars "$DOCKER_RUN_EXTRAS") CONTAINER_NAME=$CONTAINER_NAME TYPE=$TYPE DOCKER_INTERFACE=$DOCKER_INTERFACE
