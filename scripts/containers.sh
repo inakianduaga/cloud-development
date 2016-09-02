@@ -172,6 +172,8 @@ function launchWebserver()
 function refreshWebserverFromConfigForUser()
 {
     local USER=$1
+    local MODE="direct"
+    local ACTION="start"
 
     # Webserver config
     webserver_container_name=$(getWebserverContainerNameByUser $USER)
