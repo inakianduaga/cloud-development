@@ -1,11 +1,10 @@
 #!/bin/bash
-
-set -eo pipefail
-
 #
 # Script to update the webserver config for a user and hot-reload the container using the new settings
 #
 # Params:
+#   USERS_PATH (filepath of sandbox users definitions)
+#   CONFIG_PATH (filepath of sandbox general config)
 #   USER  (must match one of the users in the config)
 #   DOCKER_IMAGE
 #   PORT
@@ -13,24 +12,30 @@ set -eo pipefail
 #   DOCKER_CMD_EXTRAS
 #
 
-# Retrieve helper classes
+set -eo pipefail
 
-USERS_PATH=././../config/users
-CONFIG_PATH=././../config/config
-USER_METHODS=./user_config.sh
-CONTAINER_METHODS=./containers.sh
-
-source $USER_METHODS
-source $CONTAINER_METHODS
+# Switch to current script's folder
+BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $BASE_DIR
 
 
 # Read CLI parameters
+USERS_PATH=$1
+CONFIG_PATH=$2
+USER=$3;
+DOCKER_IMAGE=$4;
+PORT=$5;
+VOLUME=$6;
+DOCKER_CMD_EXTRAS=$7
 
-USER=$1;
-DOCKER_IMAGE=$2;
-PORT=$3;
-VOLUME=$4;
-DOCKER_CMD_EXTRAS=$5
+
+# Retrieve helper classes
+
+USER_METHODS=$BASE_DIR/user_config.sh
+CONTAINER_METHODS=$BASE_DIR/containers.sh
+
+source $USER_METHODS
+source $CONTAINER_METHODS
 
 # Update Config
 
