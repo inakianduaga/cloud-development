@@ -47,4 +47,4 @@ $(setUserWebserverDockerCMDExtras $USER "$DOCKER_CMD_EXTRAS")
 
 # Relaunch server
 
-$(refreshWebserverFromConfigForUser $USER)
+refreshWebserverFromConfigForUser "$USER"
