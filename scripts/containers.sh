@@ -156,7 +156,7 @@ function launchWebserver()
 
     # launch/stop container through direct/upstart call
     if [ $MODE = "direct" ] ; then
-        $(removeContainer "$CONTAINER_NAME")
+        $(removeContainer "$CONTAINER_NAME") || true
         if [ $ACTION = "start" ] ; then
             /usr/bin/docker run -d -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME $TYPE
         fi
