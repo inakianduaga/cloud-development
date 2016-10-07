@@ -156,7 +156,7 @@ function launchWebserver()
 
     # launch/stop container through direct/upstart call
     if [ $MODE = "direct" ] ; then
-        $(removeContainer "$CONTAINER_NAME")
+        $(removeContainer "$CONTAINER_NAME") || true
         if [ $ACTION = "start" ] ; then
             /usr/bin/docker run -d -p $DOCKER_INTERFACE:$CONTAINER_PORT:$PORT -v $CONTAINER_REPO_PATH:$VOLUME $DOCKER_RUN_EXTRAS --name $CONTAINER_NAME $TYPE
         fi
@@ -178,7 +178,7 @@ function refreshWebserverFromConfigForUser()
 
     # Webserver config
     webserver_container_name=$(getWebserverContainerNameByUser $USER)
-    webserver_container_port=$(getWebserverPortByUserId $ID)
+    webserver_container_port=$(getWebserverPortByUser $USER)
     webserver_container_repo_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
     webserver_type=$(getUserWebserver $USER)
     webserver_port=$(getUserWebserverPort $USER)
