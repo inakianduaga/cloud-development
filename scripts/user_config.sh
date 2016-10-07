@@ -208,6 +208,15 @@ function mapUserIdToStartingContainerPort()
   echo $(( $starting_port + 4 * ($1 - 1) ))
 }
 
+# Finds the webserver port for a given user
+# @param string USER
+# @return integer
+function getWebserverPortByUser()
+{
+    local ID=$(getUserConfigProperty USER_${1^^})
+    echo $(getWebserverPortByUserId $ID)
+}
+
 #
 # The webserver container port for a given user id
 # @param int id

@@ -178,7 +178,7 @@ function refreshWebserverFromConfigForUser()
 
     # Webserver config
     webserver_container_name=$(getWebserverContainerNameByUser $USER)
-    webserver_container_port=$(getWebserverPortByUserId $ID)
+    webserver_container_port=$(getWebserverPortByUser $USER)
     webserver_container_repo_path="$(getConfigKey BASE_CLOUD_USERS_FOLDER)${USER}/repo/"
     webserver_type=$(getUserWebserver $USER)
     webserver_port=$(getUserWebserverPort $USER)
